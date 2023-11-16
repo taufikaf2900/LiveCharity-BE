@@ -2,13 +2,15 @@
 const {
   Model
 } = require('sequelize');
+const { hashPassword } = require('../helpers/bcryptjs');
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       User.hasOne(models.Wallet);
       User.hasMany(models.Livestream);
       User.hasMany(models.Donation);
-      User.hasMany(models.Viwers);
+      User.hasMany(models.Viewer);
     }
   }
   User.init({
@@ -67,6 +69,11 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   }, {
+    hooks: {
+      beforeCreate: (instance) => {
+        instance.password = hashPassword(instance.password)
+      }
+    },
     sequelize,
     modelName: 'User',
   });
