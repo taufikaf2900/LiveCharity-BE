@@ -1,9 +1,10 @@
 const router = require('express').Router();
 const errorHandler = require('../middlewares/errorHandler');
 
-router.get('/', (req, res) => {
-  res.status(200).json({ message: 'Hallo from LiveCharity Server'});
-});
+router.use('/users', require('./usersRoutes/userRouter'));
+router.use('/payment', require('./paymentRoutes/paymentRouter'));
+router.use('/livestream', require('./livestreamRoutes/livestreamRoute'));
+router.use('/campaign', require('./campaignRouter/campaignRouter'));
 
 router.use(errorHandler);
 
