@@ -1,7 +1,5 @@
 const app = require('../app');
 const request = require('supertest');
-const { hashPassword, comparePassword } = require('../helpers/bcryptjs');
-const { signToken, verifyToken } = require('../helpers/jwt');
 const { sequelize } = require('../models');
 
 afterAll(async() => {
