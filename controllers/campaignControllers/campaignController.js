@@ -1,4 +1,4 @@
- class CampaignController{
+class CampaignController {
   static async handleCampaign(req, res, next) {
     try {
       res.status(200).json({ message: 'Campaign' });
@@ -15,13 +15,13 @@
     }
   }
 
- static async handleCampaignAdd(req, res, next) {
+  static async handleCampaignAdd(req, res, next) {
     try {
       res.status(200).json({ message: 'Campaign add' });
     } catch (err) {
       next(err);
     }
   }
-};
+}
 
-module.exports = CampaignController
+module.exports = CampaignController;
