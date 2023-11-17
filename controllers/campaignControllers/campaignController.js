@@ -1,7 +1,9 @@
+
  const {Livestream, User, Donation} = require("../../models")
  const { v4: uuidv4 } = require('uuid');
 
- class CampaignController{
+class CampaignController {
+
   static async handleCampaign(req, res, next) {
     try {
       const data = await Livestream.findAll({
@@ -40,7 +42,7 @@
     }
   }
 
- static async handleCampaignAdd(req, res, next) {
+  static async handleCampaignAdd(req, res, next) {
     try {
       const {title,targetFunds,thumbnail,expireDate, description} = req.body
       const data = await Livestream.create({title,targetFunds,thumbnail,expireDate, description, UserId : req.user.id,roomId:uuidv4()})
@@ -50,6 +52,6 @@
       // next(err);
     }
   }
-};
+}
 
-module.exports = CampaignController
+module.exports = CampaignController;
