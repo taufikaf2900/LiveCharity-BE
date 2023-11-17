@@ -1,12 +1,12 @@
 [
-    {
-        "username": "artis",
-        "email": "artis@mail.com",
-        "password": "123"
-      },
-      {
-        "username": "penonton",
-        "email": "penonton@mail.com",
-        "password": "123"
-      }
+  {
+    "username": "artis",
+    "email": "artis@mail.com",
+    "password": "$2a$10$/oUVHxm1jU0N3zVo75fdcet7bbxYzRkhznsTd3vAUGI2fYWtbDmMW"
+  },
+  {
+    "username": "penonton",
+    "email": "penonton@mail.com",
+    "password": "123"
+  }
 ]
