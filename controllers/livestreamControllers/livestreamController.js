@@ -1,6 +1,8 @@
- const { Livestream } = require('../../models');
 
- class LivestreamController{
+const { Livestream } = require('../../models');
+
+class LivestreamController{
+
   static async handleUpdateStatusLivestream(req, res, next) {
     try {
       const { livestreamId } = req.params;
@@ -17,6 +19,6 @@
       next(err);
     }
   }
-};
+}
 
-module.exports = LivestreamController
+module.exports = LivestreamController;
