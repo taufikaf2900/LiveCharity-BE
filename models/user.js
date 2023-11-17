@@ -1,7 +1,5 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 const { hashPassword } = require('../helpers/bcryptjs');
 
 module.exports = (sequelize, DataTypes) => {
@@ -13,69 +11,72 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Viewer);
     }
   }
-  User.init({
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: {
-        args: true,
-        msg: 'Username is already used'
+  User.init(
+    {
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: {
+          args: true,
+          msg: 'Username is already used',
+        },
+        validate: {
+          notNull: {
+            args: true,
+            msg: 'Username is required',
+          },
+          notEmpty: {
+            args: true,
+            msg: 'Username is required',
+          },
+        },
       },
-      validate: {
-        notNull: {
-          args: true,
-          msg: 'Username is required'
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            args: true,
+            msg: 'Password is required',
+          },
+          notEmpty: {
+            args: true,
+            msg: 'Password is required',
+          },
         },
-        notEmpty: {
-          args: true,
-          msg: 'Username is required'
-        }
-      }
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: 'Password is required'
-        },
-        notEmpty: {
-          args: true,
-          msg: 'Password is required'
-        }
-      }
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: {
-        args: true,
-        msg: 'Email is already used'
       },
-      validate: {
-        notNull: {
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: {
           args: true,
-          msg: 'Email is required'
+          msg: 'Email is already used',
         },
-        notEmpty: {
-          args: true,
-          msg: 'Email is required'
+        validate: {
+          notNull: {
+            args: true,
+            msg: 'Email is required',
+          },
+          notEmpty: {
+            args: true,
+            msg: 'Email is required',
+          },
+          isEmail: {
+            args: true,
+            msg: 'Invalid email format',
+          },
         },
-        isEmail: {
-          args: true,
-          msg: 'Invalid email format'
-        }
-      }
-    }
-  }, {
-    hooks: {
-      beforeCreate: (instance) => {
-        instance.password = hashPassword(instance.password)
-      }
+      },
     },
-    sequelize,
-    modelName: 'User',
-  });
+    {
+      hooks: {
+        beforeCreate: (instance) => {
+          instance.password = hashPassword(instance.password);
+        },
+      },
+      sequelize,
+      modelName: 'User',
+    },
+  );
   return User;
 };
