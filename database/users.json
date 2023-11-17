@@ -2,11 +2,15 @@
   {
     "username": "artis",
     "email": "artis@mail.com",
-    "password": "$2a$10$/oUVHxm1jU0N3zVo75fdcet7bbxYzRkhznsTd3vAUGI2fYWtbDmMW"
+    "password": "$2a$10$/oUVHxm1jU0N3zVo75fdcet7bbxYzRkhznsTd3vAUGI2fYWtbDmMW",
+    "createdAt": "2023-11-14 18:17:32.405 +0700",
+    "updatedAt": "2023-11-14 18:17:32.405 +0700"
   },
   {
     "username": "penonton",
     "email": "penonton@mail.com",
-    "password": "123"
+    "password": "123",
+    "createdAt": "2023-11-14 18:17:32.405 +0700",
+    "updatedAt": "2023-11-14 18:17:32.405 +0700"
   }
 ]
