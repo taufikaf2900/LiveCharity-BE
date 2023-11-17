@@ -1,4 +1,4 @@
-const { User } = require('../../models');
+const { User, Wallet } = require('../../models');
 const { signToken } = require('../../helpers/jwt');
 const { comparePassword } = require('../../helpers/bcryptjs');
 
@@ -25,8 +25,9 @@ class UserController {
 
   static async handleRegister(req, res, next) {
     try {
-      await User.create(req.body);
-      res.status(201).json({ message: 'Register success' });
+      const user = await User.create(req.body);
+      await Wallet.create({ UserId: user.id });
+      await res.status(201).json({ message: 'Register success' });
     } catch (err) {
       next(err);
     }
