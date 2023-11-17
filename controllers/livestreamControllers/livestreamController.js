@@ -7,7 +7,7 @@
 
       const livestream = await Livestream.findByPk(livestreamId);
 
-      if(!livestream) throw { status: 404, error: 'Livestream not found' }
+      if(!livestream) throw { status: 404, error: 'Livestream is not found' }
 
       await Livestream.update({ statusLive: !livestream.status }, {
         where: { id: livestreamId }
