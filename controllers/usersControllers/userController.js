@@ -7,9 +7,9 @@ class UserController {
     try {
       const { email, password } = req.body;
 
-      if (!email) throw { status: 400, error: 'Email required' };
+      if (!email) throw { status: 400, error: 'Email is required' };
 
-      if (!password) throw { status: 400, error: 'Password required' };
+      if (!password) throw { status: 400, error: 'Password is required' };
 
       const user = await User.findOne({ where: { email } });
       if (!user || !comparePassword(password, user.password)) {
