@@ -9,7 +9,7 @@ module.exports = {
 
     let parameter = {
       transaction_details: {
-        order_id: 'YOUR-ORDERID-123456',
+        order_id: 'ORDERID-2525',
         gross_amount: 10000,
       },
       credit_card: {

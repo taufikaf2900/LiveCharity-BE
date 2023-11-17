@@ -12,6 +12,7 @@ class PaymentController {
 
   static async handleUpdateBalance(req, res, next) {
     try {
+      console.log(req.body);
       res.status(200).json({ message: 'Update balance Succes' });
     } catch (err) {
       next(err);
