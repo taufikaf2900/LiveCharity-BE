@@ -3,8 +3,8 @@ const PaymentModel = require('../../models/paymentModel/paymentModel');
 class PaymentController {
   static async handleTokenMidtrans(req, res, next) {
     try {
-      PaymentModel.midtransToken();
-      res.status(200).json({ message: 'Token midtrans here' });
+      const token = await PaymentModel.midtransToken();
+      res.status(200).json({ midtrans_token: token });
     } catch (err) {
       next(err);
     }

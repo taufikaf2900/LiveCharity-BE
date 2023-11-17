@@ -3,9 +3,8 @@ const midtransClient = require('midtrans-client');
 module.exports = {
   async midtransToken() {
     let snap = new midtransClient.Snap({
-      // Set to true if you want Production Environment (accept real transaction).
       isProduction: false,
-      serverKey: 'SB-Mid-server-utkiquC2QhSrRR4sP6LnOk6S',
+      serverKey: process.env.APIKEY_SERVER_MIDTRANS,
     });
 
     let parameter = {
@@ -24,10 +23,10 @@ module.exports = {
       },
     };
 
-    snap.createTransaction(parameter).then((transaction) => {
-      // transaction token
+    const token = snap.createTransaction(parameter).then((transaction) => {
       let transactionToken = transaction.token;
-      console.log('transactionToken:', transactionToken);
+      return transactionToken;
     });
+    return token;
   },
 };
