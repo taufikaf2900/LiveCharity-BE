@@ -1,6 +1,6 @@
 const app = require('../app');
 const request = require('supertest');
-const { sequelize, User, Wallet } = require('../models');
+const { sequelize, User, Wallet, Livestream } = require('../models');
 const users = require('../database/users.json');
 const campaigns = require('../database/campaign.json');
 const { signToken } = require('../helpers/jwt');
@@ -152,6 +152,18 @@ describe('GET /campaign', () => {
     expect(response.body[0]).toHaveProperty('createdAt', expect.any(String));
     expect(response.body[0]).toHaveProperty('updatedAt', expect.any(String));
   });
+
+  // it('Should be failed with status code 500', async() => {
+  //   await sequelize.queryInterface.dropTable('PaymentHistories');
+  //   await sequelize.queryInterface.dropTable('Viewers');
+  //   await sequelize.queryInterface.dropTable('Donations');
+  //   await sequelize.queryInterface.dropTable('Livestreams');
+  //   await sequelize.queryInterface.dropTable('Wallets');
+  //   await sequelize.queryInterface.dropTable('Users');
+  //   const response = await request(app).get('/campaign');
+  //   console.log(response, '<====================');
+  //   expect(response.status).toBe(500);
+  // })
 })
 
 describe('GET /campaign/:livestreamId', () => {
