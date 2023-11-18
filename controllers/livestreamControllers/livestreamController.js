@@ -9,7 +9,7 @@ class LivestreamController {
 
       if (!livestream) throw { status: 404, error: 'Livestream is not found' };
 
-      await Livestream.update({ statusLive: !livestream.status }, { where: { id: livestreamId } });
+      await Livestream.update({ statusLive: !livestream.statusLive }, { where: { id: livestreamId } });
 
       res.status(200).json({ message: 'Update status livestream' });
     } catch (err) {

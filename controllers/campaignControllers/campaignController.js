@@ -9,15 +9,14 @@ class CampaignController {
       });
       res.status(200).json(data);
     } catch (err) {
-      res.status(500).json({ message: 'Internal Server Error' });
-      // next(err);
+      next(err);
     }
   }
 
   static async handleCampaignDetail(req, res, next) {
     try {
       const { livestreamId } = req.params;
-      const data = await Livestream.findByPk(livestreamId, {
+      const livestream = await Livestream.findByPk(livestreamId, {
         include: [
           {
             model: Donation,
@@ -32,11 +31,12 @@ class CampaignController {
           },
         ],
       });
-      res.status(200).json(data);
+
+      if(!livestream) throw { status: 404, error: 'Campaign is not found' }
+
+      res.status(200).json(livestream);
     } catch (err) {
-      // console.log(err)
-      res.status(500).json({ message: 'Internal Server Error' });
-      // next(err);
+      next(err);
     }
   }
 
@@ -54,8 +54,7 @@ class CampaignController {
       });
       res.status(200).json(data);
     } catch (err) {
-      res.status(500).json({ message: 'Internal Server Error' });
-      // next(err);
+      next(err);
     }
   }
 }

@@ -4,7 +4,6 @@ const { User } = require('../models');
 const authentication = async (req, res, next) => {
   try {
     const payload = verifyToken(req.headers.access_token);
-    if (!payload) throw { status: 401, error: 'unauthenticated' };
 
     const user = await User.findByPk(payload.id);
     if (!user) throw { status: 401, error: 'unauthenticated' };
