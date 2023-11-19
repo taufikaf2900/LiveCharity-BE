@@ -1,11 +1,11 @@
-const { Livestream, User, Donation } = require('../../models');
+const { Livestream, User, Donation, Category } = require('../../models');
 const { v4: uuidv4 } = require('uuid');
 
 class CampaignController {
   static async handleCampaign(req, res, next) {
     try {
-      const data = await Livestream.findAll({
-        order: [['id', 'DESC']],
+      const data = await Category.findAll({
+        include: [{ model: Livestream }],
       });
       res.status(200).json(data);
     } catch (err) {
@@ -32,7 +32,7 @@ class CampaignController {
         ],
       });
 
-      if(!livestream) throw { status: 404, error: 'Campaign is not found' }
+      if (!livestream) throw { status: 404, error: 'Campaign is not found' };
 
       res.status(200).json(livestream);
     } catch (err) {
