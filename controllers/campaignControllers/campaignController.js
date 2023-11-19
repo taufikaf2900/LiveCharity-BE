@@ -42,15 +42,19 @@ class CampaignController {
 
   static async handleCampaignAdd(req, res, next) {
     try {
-      const { title, targetFunds, thumbnail, expireDate, description } = req.body;
+      const { title, targetFunds, expireDate, description, categoryId } = req.body;
+
+      const image = req?.file?.path;
+      console.log(req.file);
       const data = await Livestream.create({
         title,
         targetFunds,
-        thumbnail,
+        thumbnail: image,
         expireDate,
         description,
         UserId: req.user.id,
         roomId: uuidv4(),
+        CategoryId: categoryId
       });
       res.status(200).json(data);
     } catch (err) {
