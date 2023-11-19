@@ -125,11 +125,11 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           notNull: {
             args: true,
-            msg: 'User Id is required',
+            msg: 'Category Id is required',
           },
           notEmpty: {
             args: true,
-            msg: 'User Id is required',
+            msg: 'Category Id is required',
           },
         },
       },
