@@ -8,7 +8,6 @@ module.exports = (sequelize, DataTypes) => {
       User.hasOne(models.Wallet);
       User.hasMany(models.Livestream);
       User.hasMany(models.Donation);
-      User.hasMany(models.Viewer);
     }
   }
   User.init(

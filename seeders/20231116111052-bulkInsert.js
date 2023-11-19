@@ -10,6 +10,11 @@ module.exports = {
       return el;
     });
 
+    const category = require('../database/category.json').map((el) => {
+      el.createdAt = el.updatedAt = new Date();
+      return el;
+    });
+
     const campaign = require('../database/campaign.json').map((el) => {
       el.createdAt = el.updatedAt = new Date();
       return el;
@@ -20,13 +25,15 @@ module.exports = {
       return el;
     });
     await queryInterface.bulkInsert('Users', users, {});
+    await queryInterface.bulkInsert('Categories', category, {});
     await queryInterface.bulkInsert('Livestreams', campaign, {});
     await queryInterface.bulkInsert('Wallets', wallets, {});
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Livestreams', null, {});
     await queryInterface.bulkDelete('Users', null, {});
+    await queryInterface.bulkDelete('Category', null, {});
+    await queryInterface.bulkDelete('Livestreams', null, {});
     await queryInterface.bulkDelete('Wallets', null, {});
   },
 };

@@ -1,1 +1,3 @@
 npx sequelize-cli model:generate --name PaymentHistory --attributes UserId:integer,orderId:string,statusPayment:boolean
+
+npx sequelize-cli model:generate --name Category --attributes name:string
