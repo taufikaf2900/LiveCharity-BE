@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Livestream.belongsTo(models.User);
       Livestream.hasMany(models.Donation);
+      Livestream.belongsTo(models.Category);
     }
   }
   Livestream.init(
@@ -105,6 +106,20 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: false,
       },
       UserId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notNull: {
+            args: true,
+            msg: 'User Id is required',
+          },
+          notEmpty: {
+            args: true,
+            msg: 'User Id is required',
+          },
+        },
+      },
+      CategoryId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
