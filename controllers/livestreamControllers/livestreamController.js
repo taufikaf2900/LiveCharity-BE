@@ -21,27 +21,18 @@ class LivestreamController {
     try {
       const { livestreamId: LivestreamId, amount, comment } = req.body;
       const { id: UserId } = req.user;
-
       const checkBalance = await Wallet.findOne({ where: { UserId } });
       if (checkBalance.balance >= amount) {
         await Wallet.decrement({ balance: amount }, { where: { UserId } });
-
         await Donation.create({ LivestreamId, UserId, amount, comment });
-
+        await Livestream.increment({ currentFunds: amount }, { where: { id: LivestreamId } })
+        
         res.status(200).json({ message: 'Success donate' });
       } else {
         throw { status: 400, error: 'Failed donate' };
       }
     } catch (err) {
-      next(err);
-    }
-  }
-
-  static async handleBalance(req, res, next) {
-    try {
-      const balance = await Wallet.findOne({ where: { UserId: req.user.id }, attributes: ['balance'] });
-      res.status(200).json({ message: balance });
-    } catch (err) {
+      // console.log(err);
       next(err);
     }
   }
