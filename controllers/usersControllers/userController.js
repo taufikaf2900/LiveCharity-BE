@@ -32,6 +32,15 @@ class UserController {
       next(err);
     }
   }
+
+  static async handleBalance(req, res, next) {
+    try {
+      const balance = await Wallet.findOne({ where: { UserId: req.user.id }, attributes: ['balance'] });
+      res.status(200).json({ message: balance });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = UserController;
