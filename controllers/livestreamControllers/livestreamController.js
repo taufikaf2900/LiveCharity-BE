@@ -27,6 +27,7 @@ class LivestreamController {
         await Wallet.decrement({ balance: amount }, { where: { UserId } });
 
         await Livestream.increment({ currentFunds: amount }, { where: { id: LivestreamId } });
+
         await Donation.create({ LivestreamId, UserId, amount, comment });
 
         res.status(200).json({ message: 'Success donate' });
