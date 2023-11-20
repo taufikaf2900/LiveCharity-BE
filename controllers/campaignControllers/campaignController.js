@@ -45,7 +45,10 @@ class CampaignController {
       const { title, targetFunds, expireDate, description, categoryId } = req.body;
 
       const image = req?.file?.path;
-      console.log(req.file);
+
+      // if(image?.mimeType !== 'image/png' && image?.mimeType !== 'image/jpg' && image?.mimeType !== 'image/jpeg') {
+      //   throw { status: 400, error: 'File must be contain extention .png, .jgp, .or .jpeg' };
+      // }
       const data = await Livestream.create({
         title,
         targetFunds,
@@ -58,6 +61,7 @@ class CampaignController {
       });
       res.status(200).json(data);
     } catch (err) {
+      // console.log(err);
       next(err);
     }
   }

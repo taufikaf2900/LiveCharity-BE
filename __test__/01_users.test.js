@@ -1,4 +1,4 @@
-const app = require('../app');
+const {httpServer} = require('../app');
 const request = require('supertest');
 const { sequelize } = require('../models');
 
@@ -16,7 +16,7 @@ afterAll(async() => {
 
 describe('POST /users/register', () => {
   it('Should be failed if username is empty', async() => {
-    const response = await request(app).post('/users/register');
+    const response = await request(httpServer).post('/users/register');
 
     expect(response.status).toBe(400);
     expect(response.body).toBeInstanceOf(Object);
@@ -27,7 +27,7 @@ describe('POST /users/register', () => {
     const body = {
       username: "user1"
     }
-    const response = await request(app).post('/users/register').send(body);
+    const response = await request(httpServer).post('/users/register').send(body);
     expect(response.status).toBe(400);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty('message', 'Password is required');
@@ -38,7 +38,7 @@ describe('POST /users/register', () => {
       username: "user1",
       password: "secret"
     }
-    const response = await request(app).post('/users/register').send(body);
+    const response = await request(httpServer).post('/users/register').send(body);
     expect(response.status).toBe(400);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty('message', 'Email is required');
@@ -50,7 +50,7 @@ describe('POST /users/register', () => {
       password: "secret",
       email: 'user1@mail.com'
     }
-    const response = await request(app).post('/users/register').send(body);
+    const response = await request(httpServer).post('/users/register').send(body);
     expect(response.status).toBe(201);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty('message', 'Register success');
@@ -59,7 +59,7 @@ describe('POST /users/register', () => {
 
 describe('POST /users/login', () => {
   it('Should be failed if email is empty', async() => {
-    const response = await request(app).post('/users/login');
+    const response = await request(httpServer).post('/users/login');
 
     expect(response.status).toBe(400);
     expect(response.body).toBeInstanceOf(Object);
@@ -70,7 +70,7 @@ describe('POST /users/login', () => {
     const body = {
       email: 'user1@mail.com'
     }
-    const response = await request(app).post('/users/login').send(body);
+    const response = await request(httpServer).post('/users/login').send(body);
 
     expect(response.status).toBe(400);
     expect(response.body).toBeInstanceOf(Object);
@@ -82,7 +82,7 @@ describe('POST /users/login', () => {
       email: 'user1@mail.com',
       password: 'secret'
     }
-    const response = await request(app).post('/users/login').send(body);
+    const response = await request(httpServer).post('/users/login').send(body);
 
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Object);
