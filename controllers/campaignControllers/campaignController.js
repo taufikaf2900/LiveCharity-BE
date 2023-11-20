@@ -20,7 +20,7 @@ class CampaignController {
       let options = { limit: 9, offset: (pages - 1) * 9 };
 
       if (search) {
-        options.where = { CategoryId: search };
+        options.where = { CategoryId: search.split(',') };
       }
 
       const pagenation = await Livestream.findAndCountAll(options);
@@ -74,7 +74,7 @@ class CampaignController {
         description,
         UserId: req.user.id,
         roomId: uuidv4(),
-        CategoryId: categoryId
+        CategoryId: categoryId,
       });
       res.status(200).json(data);
     } catch (err) {
