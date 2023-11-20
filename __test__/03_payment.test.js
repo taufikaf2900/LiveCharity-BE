@@ -1,13 +1,13 @@
-const app = require('../app');
+const {httpServer} = require('../app');
 const request = require('supertest');
 const { signToken } = require('../helpers/jwt');
 const { User, Wallet, PaymentHistory } = require('../models');
 
 
-describe('GET /payment/get-token-midtrans', () => {
+describe('POST /payment/get-token-midtrans', () => {
   it('Should be failed if user is not logged in yet', async() => {
-    const response = await request(app).get('/payment/get-token-midtrans')
-
+    const response = await request(httpServer).post('/payment/get-token-midtrans')
+    // console.log(response);
     expect(response.status).toBe(401);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty('message', 'unauthenticated');
@@ -15,7 +15,7 @@ describe('GET /payment/get-token-midtrans', () => {
 
   it('Should be failed if user is not registered', async() => {
     const token = signToken({id: 10, email: 'userNotRegistered@mail.com', username: 'userNotRegistered'});
-    const response = await request(app).get('/payment/get-token-midtrans').set('access_token', token);
+    const response = await request(httpServer).post('/payment/get-token-midtrans').set('access_token', token);
 
     expect(response.status).toBe(401);
     expect(response.body).toBeInstanceOf(Object);
@@ -28,15 +28,16 @@ describe('GET /payment/get-token-midtrans', () => {
       email: 'test3@mail.com',
       password: 'secret'
     });
+    console.log('Test =================================================')
     const token = signToken(newUser);
-    const response = await request(app).get('/payment/get-token-midtrans').set('access_token', token);
+    const response = await request(httpServer).post('/payment/get-token-midtrans').set('access_token', token).send({amount: 10000});
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('midtrans_token', expect.any(String));
   })
 })
 
 it('Should failed if token empty', async() => {
-  const response = await request(app).get('/payment/get-token-midtrans').set('access_token', "token");
+  const response = await request(httpServer).post('/payment/get-token-midtrans').set('access_token', "token");
   expect(response.status).toBe(401);
 })
 
@@ -48,7 +49,7 @@ describe('POST /payment/balance', () => {
       gross_amound: 100000
     }
 
-    const response = await request(app).post('/payment/balance').send(body);
+    const response = await request(httpServer).post('/payment/balance').send(body);
 
     expect(response.status).toBe(400);
     expect(response.body).toBeInstanceOf(Object);
@@ -74,8 +75,8 @@ describe('POST /payment/balance', () => {
       gross_amount: 100000
     }
 
-    const response = await request(app).post('/payment/balance').send(body);
-    // console.log(response);
+    console.log("response", '<=====================================');
+    const response = await request(httpServer).post('/payment/balance').send(body);
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty('message', 'Update balance Succes');

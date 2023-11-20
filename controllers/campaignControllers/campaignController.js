@@ -59,18 +59,26 @@ class CampaignController {
 
   static async handleCampaignAdd(req, res, next) {
     try {
-      const { title, targetFunds, thumbnail, expireDate, description } = req.body;
+      const { title, targetFunds, expireDate, description, categoryId } = req.body;
+
+      const image = req?.file?.path;
+
+      // if(image?.mimeType !== 'image/png' && image?.mimeType !== 'image/jpg' && image?.mimeType !== 'image/jpeg') {
+      //   throw { status: 400, error: 'File must be contain extention .png, .jgp, .or .jpeg' };
+      // }
       const data = await Livestream.create({
         title,
         targetFunds,
-        thumbnail,
+        thumbnail: image,
         expireDate,
         description,
         UserId: req.user.id,
         roomId: uuidv4(),
+        CategoryId: categoryId
       });
       res.status(200).json(data);
     } catch (err) {
+      // console.log(err);
       next(err);
     }
   }
