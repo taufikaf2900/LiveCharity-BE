@@ -13,6 +13,23 @@ class CampaignController {
     }
   }
 
+  static async handleCampaignPagenation(req, res, next) {
+    try {
+      const { page, search } = req.query;
+      let pages = Number(page) ? +page : 1;
+      let options = { limit: 9, offset: (pages - 1) * 9 };
+
+      if (search) {
+        options.where = { CategoryId: search };
+      }
+
+      const pagenation = await Livestream.findAndCountAll(options);
+      res.status(200).json(pagenation);
+    } catch (err) {
+      next(err);
+    }
+  }
+
   static async handleCampaignDetail(req, res, next) {
     try {
       const { livestreamId } = req.params;
