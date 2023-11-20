@@ -3,7 +3,7 @@ const CampaignController = require('../../controllers/campaignControllers/campai
 const authentication = require('../../middlewares/authentication');
 
 router.get('/', CampaignController.handleCampaign);
+router.get('/pagenation', CampaignController.handleCampaignPagenation);
 router.get('/:livestreamId', CampaignController.handleCampaignDetail);
-router.post('/', authentication ,CampaignController.handleCampaignAdd);
-
+router.post('/', authentication, CampaignController.handleCampaignAdd);
 module.exports = router;
