@@ -319,7 +319,11 @@ describe('POST /campaign', () => {
       categoryId: 1
     }
 
-    const response = await request(httpServer).post('/campaign').set('access_token', access_token).send(body);
+    const response = await request(httpServer).post('/campaign').set('access_token', access_token)
+      .field('title', 'Testing')
+      .field('targetFunds', 10000000)
+      .field('thumbnail', '/assets/images/')
+      .field('title', 'Testing')
     // console.log(response.body);
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Object);

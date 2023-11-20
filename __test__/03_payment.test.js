@@ -75,7 +75,7 @@ describe('POST /payment/balance', () => {
       gross_amount: 100000
     }
 
-    console.log("response", '<=====================================');
+    // console.log("response", '<=====================================');
     const response = await request(httpServer).post('/payment/balance').send(body);
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Object);

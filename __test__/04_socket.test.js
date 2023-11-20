@@ -92,9 +92,6 @@ describe('Suite of unit tests', function () {
     socket1.disconnect();
     socket2.disconnect();
     server.close();
-    await sequelize.queryInterface.bulkDelete('Livestreams');
-    await sequelize.queryInterface.bulkDelete('Users');
-    await sequelize.queryInterface.bulkDelete('Categories');
   });
 
   describe('Join room tests', function () {
