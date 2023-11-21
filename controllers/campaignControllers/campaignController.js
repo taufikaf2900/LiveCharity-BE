@@ -34,7 +34,7 @@ class CampaignController {
     try {
       const { page, search } = req.query;
       let pages = Number(page) ? +page : 1;
-      let options = { limit: 9, offset: (pages - 1) * 9, where: { UserId: req.user.id } };
+      let options = { limit: 9, offset: (pages - 1) * 9, include: ['Category'], where: { UserId: req.user.id } };
 
       if (search) {
         options.where = { CategoryId: search.split(','), UserId: req.user.id };
