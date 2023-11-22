@@ -88,7 +88,6 @@ describe('POST /payment/balance', () => {
       transaction_status: 'capture',
       gross_amount: 100000,
     };
-
     console.log('response', '<=====================================');
     const response = await request(httpServer).post('/payment/balance').send(body);
     expect(response.status).toBe(200);
