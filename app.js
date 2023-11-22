@@ -8,6 +8,8 @@ const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
 const { Livestream, Wallet, Donation } = require('./models');
+const { v4: uuid } = require('uuid');
+console.log(uuid());
 
 const app = express();
 app.use(cors());
