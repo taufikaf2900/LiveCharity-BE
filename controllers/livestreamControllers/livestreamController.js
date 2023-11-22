@@ -24,10 +24,6 @@ class LivestreamController {
       const checkBalance = await Wallet.findOne({ where: { UserId } });
       if (checkBalance.balance >= amount) {
         await Wallet.decrement({ balance: amount }, { where: { UserId } });
-
-
-        await Livestream.increment({ currentFunds: amount }, { where: { id: LivestreamId } });
-
         await Donation.create({ LivestreamId, UserId, amount, comment });
         await Livestream.increment({ currentFunds: amount }, { where: { id: LivestreamId } })
         
@@ -36,7 +32,7 @@ class LivestreamController {
         throw { status: 400, error: 'Failed donate' };
       }
     } catch (err) {
-      // console.log(err);
+      console.log(err);
       next(err);
     }
   }
