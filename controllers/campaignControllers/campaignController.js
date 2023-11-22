@@ -77,15 +77,7 @@ class CampaignController {
   static async handleCampaignAdd(req, res, next) {
     try {
       const { title, targetFunds, expireDate, description, categoryId } = req.body;
-      console.log(req);
-      const response = await cloudinary.uploader.upload(req?.file?.path, (err, result) => {
-        if(err) {
-          console.log(err);
-        } else {
-          return result;
-        }
-      })
-      
+      const response = await cloudinary.uploader.upload(req?.file?.path);
       const data = await Livestream.create({
         title,
         targetFunds,
@@ -98,7 +90,6 @@ class CampaignController {
       });
       res.status(200).json(data);
     } catch (err) {
-      console.log(err);
       next(err);
     }
   }

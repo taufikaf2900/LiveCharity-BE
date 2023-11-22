@@ -45,30 +45,31 @@ class UserController {
 
   static async decodeJwt(req, res, next) {
     try {
-      const { token, livestreamId } = req.body
+      const { token, livestreamId } = req.body;
+      console.log(token, livestreamId, '@@@@@@@@@@@@@');
+
       const decode = verifyToken(token);
 
-      const findUser = await User.findByPk(decode.id)
-
+      const findUser = await User.findByPk(decode.id);
       if (livestreamId) {
         const findLivestream = await Livestream.findByPk(livestreamId, {
-          include: User
-        })
+          include: User,
+        });
 
-        findUser.dataValues.owner = findLivestream.User.username
+        console.log(findLivestream, 'jalan', '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+        findUser.dataValues.owner = findLivestream.User.username;
 
         if (findLivestream && findUser.id == findLivestream?.UserId) {
-          findUser.dataValues.isOwner = true
+          findUser.dataValues.isOwner = true;
         }
       }
-
       res.status(200).json({
         code: '200',
         status: 'OK',
-        data: findUser.dataValues
-      })
+        data: findUser.dataValues,
+      });
     } catch (err) {
-      next(err)
+      next(err);
     }
   }
 }
