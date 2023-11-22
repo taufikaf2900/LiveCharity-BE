@@ -3,13 +3,25 @@ const request = require('supertest');
 const { sequelize, User, Wallet, Category } = require('../models');
 const { signToken } = require('../helpers/jwt');
 const users = require('../database/users.json');
+const campaigns = require('../database/campaign.json');
+const categories = require('../database/category.json');
 beforeAll(async () => {
   try {
     users.forEach((user) => {
       user.createdAt = '2023-11-16T11:17:32.405Z';
       user.updatedAt = '2023-11-16T11:17:32.405Z';
     });
+    categories.forEach((category) => {
+      category.createdAt = '2023-11-16T11:17:32.405Z';
+      category.updatedAt = '2023-11-16T11:17:32.405Z';
+    });
+    campaigns.forEach((campaign) => {
+      campaign.createdAt = '2023-11-16T11:17:32.405Z';
+      campaign.updatedAt = '2023-11-16T11:17:32.405Z';
+    });
     await sequelize.queryInterface.bulkInsert('Users', users);
+    await sequelize.queryInterface.bulkInsert('Categories', categories);
+    await sequelize.queryInterface.bulkInsert('Livestreams', campaigns);
   } catch (error) {
     console.log(error);
   }
@@ -17,6 +29,16 @@ beforeAll(async () => {
 
 afterAll(async () => {
   try {
+    await sequelize.queryInterface.bulkDelete('Livestreams', null, {
+      truncate: true,
+      restartIdentity: true,
+      cascade: true,
+    });
+    await sequelize.queryInterface.bulkDelete('Categories', null, {
+      truncate: true,
+      restartIdentity: true,
+      cascade: true,
+    });
     await sequelize.queryInterface.bulkDelete('Users', null, {
       truncate: true,
       restartIdentity: true,
@@ -110,8 +132,15 @@ describe('POST /users/balance', () => {
   it('Should be get balance user', async () => {
     const token = signToken({ id: 1, username: 'dudungxxx', email: 'dudungxxx@gmail.com' });
     const user = await Wallet.findAll();
-    console.log(user, '<<<<');
     const response = await request(httpServer).get('/users/balance').set('access_token', token);
+    expect(response.status).toBe(200);
+    // expect(response.body).toBeInstanceOf(Object);
+  });
+
+  it('Should be get balance user', async () => {
+    const token = signToken({ id: 1, username: 'dudungxxx', email: 'dudungxxx@gmail.com' });
+    const response = await request(httpServer).post('/users/decodeJwt').send({ token, livestreamId: 1 });
+    // console.log(response);
     expect(response.status).toBe(200);
     // expect(response.body).toBeInstanceOf(Object);
   });
