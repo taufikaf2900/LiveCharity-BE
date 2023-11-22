@@ -5,7 +5,6 @@ class PaymentController {
   static async handleTokenMidtrans(req, res, next) {
     try {
       const token = await PaymentModel.midtransToken(req.user, req.body);
-      console.log(req.user);
 
       res.status(200).json({ midtrans_token: token });
     } catch (err) {

@@ -400,7 +400,6 @@ describe('POST /campaign', () => {
   //     expireDate: new Date('2024-09-12'),
   //     categoryId: 1,
   //   };
-
   //   const response = await request(httpServer).post('/campaign').set('access_token', access_token).send(body);
   //   // console.log(response.body);
   //   expect(response.status).toBe(200);

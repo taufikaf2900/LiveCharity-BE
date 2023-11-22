@@ -7,37 +7,12 @@ const router = require('./routes');
 const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
-const socketHandler = require('./socket');
-const multer = require('multer');
-const path = require('path');
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './assets/images')
-  },
-  filename: (req, file, cb) => {
-    cb(null, new Date().getTime() + '-' + file.originalname);
-  }
-});
-
-
-// const fileFilter = (req, file, cb) => {
-//   if(file.mimetype === 'image/png' ||
-//     file.mimetype === 'image/jpeg' ||
-//     file.mimetype === 'image/jpg'
-//   ) {
-//     cb(null, true);
-//   } else {
-//     cb(null, false)
-//   }
-// }
+const { Livestream, Wallet, Donation } = require('./models');
 
 const app = express();
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(multer({storage}).single('image'));
-app.use('/assets/images', express.static(path.join(__dirname, 'assets', 'images')))
 app.use(router);
 
 const httpServer = http.createServer(app);
@@ -50,7 +25,39 @@ const io = new Server(httpServer, {
 
 io.on('connection', (socket) => {
   console.log(`Client with id ${socket.id} is connect`);
-  socketHandler(socket, io);
+})
+
+app.post('/livestream/donateInRoom', async (req, res, next) => {
+  try {
+    const { livestreamId: LivestreamId, amount, comment, user } = req.body;
+    const checkBalance = await Wallet.findOne({ where: { UserId: user.id } });
+
+    if (checkBalance.balance >= amount) {
+      await Wallet.decrement({ balance: amount }, { where: { UserId: user.id } });
+
+      await Donation.create({ LivestreamId, UserId: user.id, amount, comment });
+      await Livestream.increment({ currentFunds: amount }, { where: { id: LivestreamId } })
+
+      const findUpdatedLivestream = await Livestream.findByPk(LivestreamId, {
+        attributes: ['id', 'currentFunds', 'targetFunds']
+      })
+
+      io.emit('donate', {
+        user: user.username,
+        nominal: amount,
+        message: comment,
+        currentFunds: findUpdatedLivestream.currentFunds,
+        targetFunds: findUpdatedLivestream.targetFunds
+      })
+
+      res.status(200).json({ message: 'Success donate' });
+    } else {
+      throw { status: 400, error: 'Failed donate' };
+    }
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
 })
 
 module.exports = { httpServer, io };

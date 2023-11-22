@@ -1,7 +1,6 @@
 const { Livestream, User, Donation, Category } = require('../../models');
 const { v4: uuidv4 } = require('uuid');
-// const { v2: cloudinary } = require('cloudinary');
-const cloudinary = require('cloudinary').v2;
+const cloudinary = require('../../config/cloudinary');
 class CampaignController {
   static async handleCampaign(req, res, next) {
     try {
@@ -78,16 +77,19 @@ class CampaignController {
   static async handleCampaignAdd(req, res, next) {
     try {
       const { title, targetFunds, expireDate, description, categoryId } = req.body;
-      console.log(req.file);
-      const image = req?.file?.path;
 
-      // if(image?.mimeType !== 'image/png' && image?.mimeType !== 'image/jpg' && image?.mimeType !== 'image/jpeg') {
-      //   throw { status: 400, error: 'File must be contain extention .png, .jgp, .or .jpeg' };
-      // }
+      const response = await cloudinary.uploader.upload(req?.file?.path, (err, result) => {
+        if(err) {
+          console.log(err);
+        } else {
+          return result;
+        }
+      })
+      
       const data = await Livestream.create({
         title,
         targetFunds,
-        thumbnail: image,
+        thumbnail: response.secure_url,
         expireDate,
         description,
         UserId: req.user.id,
