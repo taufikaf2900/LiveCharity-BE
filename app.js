@@ -8,6 +8,7 @@ const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
 const { Livestream, Wallet, Donation } = require('./models');
+const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 app.use(cors());
@@ -31,7 +32,6 @@ app.post('/livestream/donateInRoom', async (req, res, next) => {
   try {
     const { livestreamId: LivestreamId, amount, comment, user } = req.body;
     const checkBalance = await Wallet.findOne({ where: { UserId: user.id } });
-    console.log(checkBalance, '@@@@@@@@@@@@@@@@@@@');
     if (checkBalance.balance >= amount) {
       await Wallet.decrement({ balance: amount }, { where: { UserId: user.id } });
 
@@ -56,9 +56,11 @@ app.post('/livestream/donateInRoom', async (req, res, next) => {
       throw { status: 400, error: 'Failed donate' };
     }
   } catch (err) {
-    console.log(err);
+    console.log(JSON.stringify(err), '<============');
     next(err);
   }
 });
+
+app.use(errorHandler);
 
 module.exports = { httpServer, io };

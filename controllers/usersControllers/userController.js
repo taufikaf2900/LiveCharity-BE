@@ -56,7 +56,7 @@ class UserController {
           include: User,
         });
 
-        console.log(findLivestream, 'jalan', '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+        // console.log(findLivestream, 'jalan', '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
         findUser.dataValues.owner = findLivestream.User.username;
 
         if (findLivestream && findUser.id == findLivestream?.UserId) {

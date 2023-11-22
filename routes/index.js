@@ -6,6 +6,5 @@ router.use('/payment', require('./paymentRoutes/paymentRouter'));
 router.use('/livestream', require('./livestreamRoutes/livestreamRoute'));
 router.use('/campaign', require('./campaignRouter/campaignRouter'));
 
-router.use(errorHandler);
 
 module.exports = router;

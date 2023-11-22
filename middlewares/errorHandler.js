@@ -1,9 +1,10 @@
 const errorHandler = (err, req, res, next) => {
-  console.log(err);
+  // console.log(err);
 
   let statusCode = err.status || 500;
 
   let messageError = err.error || 'Internal Server Error';
+  
 
   if (err.name === 'SequelizeUniqueConstraintError' || err.name === 'SequelizeValidationError') {
     statusCode = 400;
@@ -12,7 +13,8 @@ const errorHandler = (err, req, res, next) => {
     statusCode = 401,
     messageError = 'unauthenticated';
   }
-
+  // console.log('111111111111111111111111')
+  // console.log(statusCode, messageError, '@@@@@@@@@@@')
   res.status(statusCode).json({ message: messageError });
 };
 
