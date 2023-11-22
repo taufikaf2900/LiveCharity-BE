@@ -4,11 +4,20 @@ const { sequelize, User, Wallet, Category } = require('../models');
 const users = require('../database/users.json');
 const campaigns = require('../database/campaign.json');
 const categories = require('../database/category.json');
+const wallets = require('../database/wallet.json');
 const { signToken } = require('../helpers/jwt');
-
+const path = require('path');
 let access_token = '';
+
+const cloudinary = require('../config/cloudinary');
+
+jest.mock('cloudinary');
+
 beforeAll(async () => {
   try {
+    cloudinary.uploader.upload.mockResolvedValue({
+      secure_url: 'https://mocked-cloudinary-url.com/image.jpg',
+    });
     users.forEach((user) => {
       user.createdAt = '2023-11-16T11:17:32.405Z';
       user.updatedAt = '2023-11-16T11:17:32.405Z';
@@ -21,15 +30,19 @@ beforeAll(async () => {
       campaign.createdAt = '2023-11-16T11:17:32.405Z';
       campaign.updatedAt = '2023-11-16T11:17:32.405Z';
     });
+    wallets.forEach((campaign) => {
+      campaign.createdAt = '2023-11-16T11:17:32.405Z';
+      campaign.updatedAt = '2023-11-16T11:17:32.405Z';
+    });
     await sequelize.queryInterface.bulkInsert('Users', users);
     await sequelize.queryInterface.bulkInsert('Categories', categories);
     await sequelize.queryInterface.bulkInsert('Livestreams', campaigns);
+    await sequelize.queryInterface.bulkInsert('Wallets', wallets);
     const userDonate = await User.create({
       username: 'userDonate',
       email: 'userDonate@mail.com',
       password: 'secret',
     });
-    console.log(userDonate, '@@@@@@@@@@@@@@@@@@@');
     access_token = signToken(userDonate);
     await Wallet.create({ UserId: userDonate.id });
   } catch (error) {
@@ -40,6 +53,11 @@ beforeAll(async () => {
 afterAll(async () => {
   try {
     await sequelize.queryInterface.bulkDelete('Livestreams', null, {
+      truncate: true,
+      restartIdentity: true,
+      cascade: true,
+    });
+    await sequelize.queryInterface.bulkDelete('Wallets', null, {
       truncate: true,
       restartIdentity: true,
       cascade: true,
@@ -102,6 +120,23 @@ describe('Testing livestream PATCH route', () => {
     expect(response.status).toBe(401);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty('message', 'unauthenticated');
+  });
+
+  it('Should be failed donate if user not login yet', async () => {
+    const body = {
+      livestreamId: 1,
+      amount: 0,
+      comment: 'Walau sedikit semoga bermanfaat ya',
+      user: {
+        id: 2,
+        username: 'dudungxxx',
+      },
+    };
+    const response = await request(httpServer).post('/livestream/donateInRoom').send(body);
+    console.log(response.body);
+    expect(response.status).toBe(200);
+    // expect(response.body).toBeInstanceOf(Object);
+    // expect(response.body).toHaveProperty('message', 'unauthenticated');
   });
 
   it('Should be failed if user does not registered', async () => {
@@ -390,28 +425,27 @@ describe('POST /campaign', () => {
     expect(response.body).toHaveProperty('message', 'Minimum time of livestream is tomorrow!');
   });
 
-  // it.skip('Should be success if user has been logged in and fill all the field', async () => {
-  //   const body = {
-  //     title: 'Testing',
-  //     targetFunds: 1000000,
-  //     thumbnail:
-  //       'https://70867a2ef4c36f4d1885-185a360f54556c7e8b9c7a9b6e422c6e.ssl.cf6.rackcdn.com/picture/campaign/2023-11-13/P8Qz5AHb2URH.jpg',
-  //     description: 'Testing',
-  //     expireDate: new Date('2024-09-12'),
-  //     categoryId: 1,
-  //   };
-  //   const response = await request(httpServer).post('/campaign').set('access_token', access_token).send(body);
-  //   // console.log(response.body);
-  //   expect(response.status).toBe(200);
-  //   expect(response.body).toBeInstanceOf(Object);
-  //   expect(response.body).toHaveProperty('title', 'Testing');
-  //   expect(response.body).toHaveProperty('targetFunds', 1000000);
-  //   expect(response.body).toHaveProperty(
-  //     'thumbnail',
-  //     'https://70867a2ef4c36f4d1885-185a360f54556c7e8b9c7a9b6e422c6e.ssl.cf6.rackcdn.com/picture/campaign/2023-11-13/P8Qz5AHb2URH.jpg',
-  //   );
-  //   expect(response.body).toHaveProperty('expireDate', expect.any(String));
-  //   expect(response.body).toHaveProperty('UserId', expect.any(Number));
-  //   expect(response.body).toHaveProperty('roomId', expect.any(String));
-  // });
+  it('Should be success if user has been logged in and fill all the field', async () => {
+    const response = await request(httpServer)
+      .post('/campaign')
+      .set({
+        access_token: access_token,
+        'content-type': 'multipart/form-data',
+      })
+      .field('title', 'Testing')
+      .field('targetFunds', 1200000)
+      .field('expireDate', '2023-11-23 18:17:32.405 +0700')
+      .field('description', 'Testing')
+      .field('categoryId', 1)
+      .attach('image', path.resolve(__dirname, 'image.jpg'));
+    console.log(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty('title');
+    expect(response.body).toHaveProperty('targetFunds');
+    expect(response.body).toHaveProperty('thumbnail');
+    expect(response.body).toHaveProperty('expireDate', expect.any(String));
+    expect(response.body).toHaveProperty('UserId', expect.any(Number));
+    expect(response.body).toHaveProperty('roomId', expect.any(String));
+  });
 });
