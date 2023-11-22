@@ -33,7 +33,6 @@ module.exports = {
       console.log(await token, '<========================');
       return token;
     } catch (err) {
-      console.log(err);
       throw err;
     }
   },

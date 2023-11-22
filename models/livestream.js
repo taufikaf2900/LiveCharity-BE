@@ -69,6 +69,7 @@ module.exports = (sequelize, DataTypes) => {
             msg: 'Expire Date is required',
           },
           isExpireDateValid(value) {
+            console.log(value, '@@@@@@@@@@<<<<<<<<<<<<<<<<');
             if (value <= new Date()) {
               throw new Error('Minimum time of livestream is tomorrow!');
             }
