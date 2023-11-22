@@ -47,7 +47,8 @@ app.post('/livestream/donateInRoom', async (req, res, next) => {
         nominal: amount,
         message: comment,
         currentFunds: findUpdatedLivestream.currentFunds,
-        targetFunds: findUpdatedLivestream.targetFunds
+        targetFunds: findUpdatedLivestream.targetFunds,
+        fundPercentage: Math.floor(findUpdatedLivestream.currentFunds / findUpdatedLivestream.targetFunds) + '%'
       })
 
       res.status(200).json({ message: 'Success donate' });
