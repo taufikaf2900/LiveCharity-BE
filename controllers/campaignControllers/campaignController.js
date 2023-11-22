@@ -80,28 +80,21 @@ class CampaignController {
       const { title, targetFunds, expireDate, description, categoryId } = req.body;
       console.log(req.file);
       const image = req?.file?.path;
-      cloudinary.config({
-        cloud_name: 'dxmgoo3wu',
-        api_key: '686994914976363',
-        api_secret: 'LOdi24HFX6VUj7ia6iSPL7476nk',
-      });
-      const resw = await cloudinary.uploader.upload(req.file.name);
-      console.log(resw, '@@@@@@@');
+
       // if(image?.mimeType !== 'image/png' && image?.mimeType !== 'image/jpg' && image?.mimeType !== 'image/jpeg') {
       //   throw { status: 400, error: 'File must be contain extention .png, .jgp, .or .jpeg' };
       // }
-      // const data = await Livestream.create({
-      //   title,
-      //   targetFunds,
-      //   thumbnail: image,
-      //   expireDate,
-      //   description,
-      //   UserId: req.user.id,
-      //   roomId: uuidv4(),
-      //   CategoryId: categoryId,
-      // });
-      // res.status(200).json(data);
-      res.status(200).json('hanyong');
+      const data = await Livestream.create({
+        title,
+        targetFunds,
+        thumbnail: image,
+        expireDate,
+        description,
+        UserId: req.user.id,
+        roomId: uuidv4(),
+        CategoryId: categoryId,
+      });
+      res.status(200).json(data);
     } catch (err) {
       console.log(err);
       next(err);
