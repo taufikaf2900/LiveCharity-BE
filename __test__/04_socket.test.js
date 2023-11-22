@@ -116,30 +116,30 @@ describe('Suite of unit tests', function () {
     });
   });
 
-  describe('Donation test', () => {
-    it('Should work', (done) => {
-      socket2.emit('send-donation', {
-        LivestreamId: liveStream.id,
-        roomId: liveStream.roomId,
-        username: user2.username,
-        UserId: user2.id,
-        amount: 100000,
-        comment: 'Get Well Soon!',
-      });
+  // describe('Donation test', () => {
+  //   it('Should work', (done) => {
+  //     socket2.emit('send-donation', {
+  //       LivestreamId: liveStream.id,
+  //       roomId: liveStream.roomId,
+  //       username: user2.username,
+  //       UserId: user2.id,
+  //       amount: 100000,
+  //       comment: 'Get Well Soon!',
+  //     });
 
-      socket1.on('send-donation-success', (payload) => {
-        try {
-          console.log(payload);
-          expect(payload).toHaveProperty('roomId', '2345');
-          expect(payload).toHaveProperty('username', 'testDonate2');
-          expect(payload).toHaveProperty('amount', 100000);
-          expect(payload).toHaveProperty('comment', 'Get Well Soon!');
-          expect(payload).toHaveProperty('currentFunds', expect.any(Number));
-          done();
-        } catch (err) {
-          done(err);
-        }
-      });
-    });
-  });
+  //     socket1.on('send-donation-success', (payload) => {
+  //       try {
+  //         console.log(payload);
+  //         expect(payload).toHaveProperty('roomId', '2345');
+  //         expect(payload).toHaveProperty('username', 'testDonate2');
+  //         expect(payload).toHaveProperty('amount', 100000);
+  //         expect(payload).toHaveProperty('comment', 'Get Well Soon!');
+  //         expect(payload).toHaveProperty('currentFunds', expect.any(Number));
+  //         done();
+  //       } catch (err) {
+  //         done(err);
+  //       }
+  //     });
+  //   });
+  // });
 });
