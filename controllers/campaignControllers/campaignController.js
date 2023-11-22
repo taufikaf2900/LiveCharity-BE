@@ -77,7 +77,7 @@ class CampaignController {
   static async handleCampaignAdd(req, res, next) {
     try {
       const { title, targetFunds, expireDate, description, categoryId } = req.body;
-
+      console.log(req);
       const response = await cloudinary.uploader.upload(req?.file?.path, (err, result) => {
         if(err) {
           console.log(err);

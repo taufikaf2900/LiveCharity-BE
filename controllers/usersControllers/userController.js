@@ -1,6 +1,7 @@
 const { User, Wallet } = require('../../models');
-const { signToken } = require('../../helpers/jwt');
+const { signToken, verifyToken } = require('../../helpers/jwt');
 const { comparePassword } = require('../../helpers/bcryptjs');
+const { Livestream } = require('../../models');
 
 class UserController {
   static async handleLogin(req, res, next) {
@@ -39,6 +40,35 @@ class UserController {
       res.status(200).json({ message: balance });
     } catch (err) {
       next(err);
+    }
+  }
+
+  static async decodeJwt(req, res, next) {
+    try {
+      const { token, livestreamId } = req.body
+      const decode = verifyToken(token);
+
+      const findUser = await User.findByPk(decode.id)
+
+      if (livestreamId) {
+        const findLivestream = await Livestream.findByPk(livestreamId, {
+          include: User
+        })
+
+        findUser.dataValues.owner = findLivestream.User.username
+
+        if (findLivestream && findUser.id == findLivestream?.UserId) {
+          findUser.dataValues.isOwner = true
+        }
+      }
+
+      res.status(200).json({
+        code: '200',
+        status: 'OK',
+        data: findUser.dataValues
+      })
+    } catch (err) {
+      next(err)
     }
   }
 }
