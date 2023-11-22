@@ -32,6 +32,7 @@ class LivestreamController {
         throw { status: 400, error: 'Failed donate' };
       }
     } catch (err) {
+      console.log(console.log(err));
       // console.log(err);
       next(err);
     }

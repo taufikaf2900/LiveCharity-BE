@@ -1,6 +1,6 @@
 const { Livestream, User, Donation, Category } = require('../../models');
 const { v4: uuidv4 } = require('uuid');
-
+const cloudinary = require('../../config/cloudinary');
 class CampaignController {
   static async handleCampaign(req, res, next) {
     try {
@@ -42,27 +42,33 @@ class CampaignController {
 
   static async handleCampaignAdd(req, res, next) {
     try {
+      const response = await cloudinary.uploader.upload(req?.file?.path, (err, result) => {
+        if(err) {
+          console.log(err);
+        } else {
+          return result;
+        }
+      })
+
       const { title, targetFunds, expireDate, description, categoryId } = req.body;
-
-      const image = req?.file?.path;
-
-      // if(image?.mimeType !== 'image/png' && image?.mimeType !== 'image/jpg' && image?.mimeType !== 'image/jpeg') {
-      //   throw { status: 400, error: 'File must be contain extention .png, .jgp, .or .jpeg' };
-      // }
-      const data = await Livestream.create({
-        title,
-        targetFunds,
-        thumbnail: image,
-        expireDate,
-        description,
-        UserId: req.user.id,
-        roomId: uuidv4(),
-        CategoryId: categoryId
-      });
+        const data = await Livestream.create({
+          title,
+          targetFunds,
+          thumbnail: response.secure_url,
+          expireDate,
+          description,
+          UserId: req.user.id,
+          roomId: uuidv4(),
+          CategoryId: categoryId
+        });
       res.status(200).json(data);
     } catch (err) {
-      // console.log(err);
-      next(err);
+      console.log(err);
+      if(!req.file) {
+        next({ status: 400, error: 'Please insert thumbnail'})
+      } else {
+        next(err);
+      }
     }
   }
 }

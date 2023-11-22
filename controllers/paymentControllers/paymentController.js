@@ -15,6 +15,7 @@ class PaymentController {
 
   static async handleUpdateBalance(req, res, next) {
     try {
+      console.log('BALENCE')
       const { order_id, transaction_status, gross_amount } = req.body;
       if (transaction_status === 'capture') {
         const history = await PaymentHistory.findOne({ where: { orderId: order_id } });

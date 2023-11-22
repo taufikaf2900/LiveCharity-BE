@@ -28,7 +28,7 @@ describe('POST /payment/get-token-midtrans', () => {
       email: 'test3@mail.com',
       password: 'secret'
     });
-    console.log('Test =================================================')
+    
     const token = signToken(newUser);
     const response = await request(httpServer).post('/payment/get-token-midtrans').set('access_token', token).send({amount: 10000});
     expect(response.status).toBe(200);
